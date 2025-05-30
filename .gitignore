@@ -1,0 +1,12 @@
+# File kompilasi/eksekusi
+*.exe
+*.o
+*.bin
+*.out
+
+# File proyek Code::Blocks
+*.cbp
+*.layout
+
+# Log files
+*.log
