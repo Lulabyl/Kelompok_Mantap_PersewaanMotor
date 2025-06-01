@@ -20,6 +20,15 @@ typedef struct {
 Motor daftarMotor[MAX_MOTOR];
 int jumlahMotor = 0;
 
+typedef struct {
+    char namaPenyewa[50];
+    char namaMotor[30];
+    int durasiSewa;
+} Penyewa;
+
+Penyewa daftarPenyewa[100];
+int jumlahPenyewa = 0;
+
 void clearScreen();
 void tampilanMainMenu();
 void registerUser();
@@ -28,6 +37,7 @@ void tampilanMenuMasuk();
 void menuMasuk(int a);
 void tambahMotor();
 void stockMotor();
+void dataPenyewa();
 
 int main() {
     int pilihan;
@@ -83,7 +93,7 @@ do {
             break;
             
         case 3:
-            printf("menu 3 belum dibuat pak\n");
+            dataPenyewa();
             break;
 
         case 4:
@@ -152,9 +162,59 @@ void stockMotor() {
     }
 }
 
+void dataPenyewa() {
+    if (jumlahMotor == 0) {
+        printf("Belum ada data motor yang tersedia untuk disewa.\n");
+        return;
+    }
+
+    Penyewa p;
+
+    printf("\n--- INPUT DATA PENYEWA ---\n");
+    printf("Nama Penyewa: ");
+    fgets(p.namaPenyewa, sizeof(p.namaPenyewa), stdin);
+    p.namaPenyewa[strcspn(p.namaPenyewa, "\n")] = '\0';
+
+    printf("\nPilih motor yang ingin disewa:\n");
+    for (int i = 0; i < jumlahMotor; i++) {
+        printf("%d. %s (Stok: %d, Harga/hari: Rp %.2f)\n", i + 1,
+               daftarMotor[i].nama, daftarMotor[i].stok, daftarMotor[i].hargaPerHari);
+    }
+
+    int pilihan;
+    printf("Masukkan nomor motor: ");
+    scanf("%d", &pilihan);
+    getchar();
+
+    if (pilihan < 1 || pilihan > jumlahMotor) {
+        printf("Pilihan tidak valid.\n");
+        return;
+    }
+
+    if (daftarMotor[pilihan - 1].stok == 0) {
+        printf("Maaf, motor ini sedang kosong.\n");
+        return;
+    }
+
+    strcpy(p.namaMotor, daftarMotor[pilihan - 1].nama);
+
+    printf("Lama sewa (hari): ");
+    scanf("%d", &p.durasiSewa);
+    getchar();
+
+    daftarMotor[pilihan - 1].stok--;
+
+    daftarPenyewa[jumlahPenyewa] = p;
+    jumlahPenyewa++;
+
+    printf("Data penyewa berhasil disimpan!\n");
+}
+
 void clearScreen() {
     #ifdef _WIN32
         system("cls");
+    #else
+    system("clear");
     #endif
 }
 
