@@ -148,12 +148,10 @@ void menuMasuk(int a) {
                     dataPenyewa();
                     break;
                 case 4:
-                    gotoxy(25, 20);
-                    printf("menu 4 belum dibuat pak\n");
+                    kalkulasiHarga();
                     break;
                 case 5:
-                    gotoxy(25, 20);
-                    printf("menu 5 belum dibuat pak\n");
+                    cetakStruk();
                     break;
                 case 6:
                     isLoggedIn = 0;
@@ -289,6 +287,149 @@ void dataPenyewa() {
 
     gotoxy(25, 15 + jumlahMotor);
     printf("Data penyewa berhasil disimpan!\n");
+}
+
+void kalkulasiHarga() {
+    clearScreen();
+    if (jumlahPenyewa == 0) {
+        gotoxy(25, 10);
+        printf("Belum ada data penyewa.\n");
+        return;
+    }
+
+    gotoxy(25, 5);
+    printf("--- KALKULASI HARGA SEWA ---");
+
+    // Display all renters
+    for (int i = 0; i < jumlahPenyewa; i++) {
+        gotoxy(25, 7 + (i*4));
+        printf("Penyewa ke-%d", i + 1);
+        gotoxy(25, 8 + (i*4));
+        printf("Nama Penyewa  : %s", daftarPenyewa[i].namaPenyewa);
+        gotoxy(25, 9 + (i*4));
+        printf("Motor Disewa  : %s (%d hari)", daftarPenyewa[i].namaMotor, daftarPenyewa[i].durasiSewa);
+        gotoxy(25, 10 + (i*4));
+        printf("-----------------------------------");
+    }
+
+    int pilihan;
+    gotoxy(25, 11 + (jumlahPenyewa*4));
+    printf("Pilih penyewa untuk kalkulasi (nomor): ");
+    scanf("%d", &pilihan);
+    getchar();
+
+    if (pilihan < 1 || pilihan > jumlahPenyewa) {
+        gotoxy(25, 13 + (jumlahPenyewa*4));
+        printf("Pilihan tidak valid.\n");
+        return;
+    }
+
+    // Find the motor information
+    float hargaPerHari = 0;
+    for (int i = 0; i < jumlahMotor; i++) {
+        if (strcmp(daftarMotor[i].nama, daftarPenyewa[pilihan-1].namaMotor) == 0) {
+            hargaPerHari = daftarMotor[i].hargaPerHari;
+            break;
+        }
+    }
+
+    float totalHarga = hargaPerHari * daftarPenyewa[pilihan-1].durasiSewa;
+
+    clearScreen();
+    gotoxy(25, 5);
+    printf("--- HASIL KALKULASI HARGA ---");
+    gotoxy(25, 7);
+    printf("Nama Penyewa  : %s", daftarPenyewa[pilihan-1].namaPenyewa);
+    gotoxy(25, 8);
+    printf("Motor Disewa  : %s", daftarPenyewa[pilihan-1].namaMotor);
+    gotoxy(25, 9);
+    printf("Durasi Sewa   : %d hari", daftarPenyewa[pilihan-1].durasiSewa);
+    gotoxy(25, 10);
+    printf("Harga per Hari: Rp %.2f", hargaPerHari);
+    gotoxy(25, 11);
+    printf("Total Harga   : Rp %.2f", totalHarga);
+    gotoxy(25, 13);
+    printf("===================================");
+}
+
+void cetakStruk() {
+    clearScreen();
+    if (jumlahPenyewa == 0) {
+        gotoxy(25, 10);
+        printf("Belum ada data penyewa.\n");
+        return;
+    }
+
+    gotoxy(25, 5);
+    printf("--- CETAK STRUK SEWA ---");
+
+    // Display all renters
+    for (int i = 0; i < jumlahPenyewa; i++) {
+        gotoxy(25, 7 + (i*4));
+        printf("Penyewa ke-%d", i + 1);
+        gotoxy(25, 8 + (i*4));
+        printf("Nama Penyewa  : %s", daftarPenyewa[i].namaPenyewa);
+        gotoxy(25, 9 + (i*4));
+        printf("Motor Disewa  : %s", daftarPenyewa[i].namaMotor);
+        gotoxy(25, 10 + (i*4));
+        printf("-----------------------------------");
+    }
+
+    int pilihan;
+    gotoxy(25, 11 + (jumlahPenyewa*4));
+    printf("Pilih penyewa untuk cetak struk (nomor): ");
+    scanf("%d", &pilihan);
+    getchar();
+
+    if (pilihan < 1 || pilihan > jumlahPenyewa) {
+        gotoxy(25, 13 + (jumlahPenyewa*4));
+        printf("Pilihan tidak valid.\n");
+        return;
+    }
+
+    // Find the motor information
+    float hargaPerHari = 0;
+    for (int i = 0; i < jumlahMotor; i++) {
+        if (strcmp(daftarMotor[i].nama, daftarPenyewa[pilihan-1].namaMotor) == 0) {
+            hargaPerHari = daftarMotor[i].hargaPerHari;
+            break;
+        }
+    }
+
+    float totalHarga = hargaPerHari * daftarPenyewa[pilihan-1].durasiSewa;
+
+    clearScreen();
+    gotoxy(20, 3);
+    printf("================================================");
+    gotoxy(20, 4);
+    printf("=               STRUK SEWA MOTOR               =");
+    gotoxy(20, 5);
+    printf("=           SEWA MOTOR SATUHATI                =");
+    gotoxy(20, 6);
+    printf("================================================");
+    gotoxy(20, 8);
+    printf(" Nama Penyewa   : %s", daftarPenyewa[pilihan-1].namaPenyewa);
+    gotoxy(20, 9);
+    printf(" Motor Disewa   : %s", daftarPenyewa[pilihan-1].namaMotor);
+    gotoxy(20, 10);
+    printf(" Durasi Sewa    : %d hari", daftarPenyewa[pilihan-1].durasiSewa);
+    gotoxy(20, 11);
+    printf(" Harga per Hari : Rp %.2f", hargaPerHari);
+    gotoxy(20, 12);
+    printf("-----------------------------------------------");
+    gotoxy(20, 13);
+    printf(" Total Harga    : Rp %.2f", totalHarga);
+    gotoxy(20, 15);
+    printf("================================================");
+    gotoxy(20, 16);
+    printf("= Terima kasih telah menggunakan layanan kami  =");
+    gotoxy(20, 17);
+    printf("=      Dari Kami, Untuk Perjalananmu           =");
+    gotoxy(20, 18);
+    printf("================================================");
+    
+    gotoxy(20, 20);
+    printf("Struk telah dicetak!");
 }
 
 void clearScreen() {
